@@ -4,8 +4,6 @@ import nouns from './data/nouns';
 
 // Function to generate combinations and write them to a file using streams
 function generateCombinationsToFile(
-  colors: string[],
-  nouns: string[],
   outputFilePath: string,
   randomRange: number[],
 ): void {

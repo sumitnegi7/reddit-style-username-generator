@@ -31,18 +31,11 @@ class HydrateUsernamesInRedis {
     redisKey: string,
   ): Promise<void> {
     try {
-      const outputFilePath = './combinations.txt'; // Adjust the output file path as needed
-      const colors = ['Red', 'Blue', 'Green']; // Example colors array
-      const nouns = ['Apple', 'Banana', 'Orange']; // Example nouns array
+      const outputFilePath = filePath; // Adjust the output file path as needed
       const randomRange = [1, 2, 3, 4]; // Example range array
 
       // Generate combinations to file using function
-      await generateCombinationsToFile(
-        colors,
-        nouns,
-        outputFilePath,
-        randomRange,
-      );
+      await generateCombinationsToFile(outputFilePath, randomRange);
 
       // Read combinations from file using streams and store in Redis
       await this.readAndStoreUsernamesFromStream(filePath, redisKey);
