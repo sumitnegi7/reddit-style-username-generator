@@ -1,0 +1,36 @@
+{
+  "name": "reddit-style-username-generator",
+  "version": "1.2.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "npx tsc -p .",
+    "dev": " ts-node src/index.ts",
+    "lint": "eslint .",
+    "migrate": " ts-node src/migrations/migration.ts",
+    "test": "NODE_ENV=test jest",
+    "format": "prettier --write src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.14.9",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "nodemon": "^3.1.3",
+    "prettier": "^3.3.1",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "ioredis": "^5.4.1"
+  }
+}
