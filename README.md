@@ -67,6 +67,7 @@ generateUsername('.', true, 7);
 Here's a complete example demonstrating how to use the package:
 
 ```typescript
+// By default this generates 1million unique username 
 import { HydrateUsernamesInRedis } from 'reddit-style-username-generator';
 
 const redisOptions = {
