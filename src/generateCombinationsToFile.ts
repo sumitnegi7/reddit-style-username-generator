@@ -25,6 +25,6 @@ function generateCombinationsToFile(
 const outputFilePath = './combinations.txt';
 const randomRange: number[] = [1, 2, 3, 4]; // Example range array
 
-generateCombinationsToFile(colors, nouns, outputFilePath, randomRange);
+generateCombinationsToFile(outputFilePath, randomRange);
 
 export { generateCombinationsToFile };
