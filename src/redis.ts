@@ -5,8 +5,12 @@ import { generateCombinationsToFile } from './generateCombinationsToFile';
 class HydrateUsernamesInRedis {
   private redis: Redis;
 
-  constructor(redisOptions: RedisOptions) {
-    this.redis = new Redis(redisOptions);
+  constructor(redisOptions: RedisOptions | Redis) {
+    if (redisOptions instanceof Redis) {
+      this.redis = redisOptions;
+    } else {
+      this.redis = new Redis(redisOptions);
+    }
   }
 
   async storeUsernamesFromFile(
