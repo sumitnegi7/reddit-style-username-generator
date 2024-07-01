@@ -96,6 +96,23 @@ class HydrateUsernamesInRedis {
     }
   }
 
+  async getRandomUsernameFromRedis(
+    redisKey: string,
+    removeSelectedUsername = false,
+  ) {
+    try {
+      const username = await this.redis.srandmember(redisKey);
+
+      if (removeSelectedUsername) {
+        await this.redis.srem(redisKey, username);
+      }
+
+      return username;
+    } catch (error) {
+      console.error('Error accessing Redis:', error);
+    }
+  }
+
   async quitRedis(): Promise<void> {
     try {
       // await this.redis.quit();

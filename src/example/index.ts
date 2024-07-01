@@ -14,6 +14,7 @@ async function main() {
 
   try {
     await generator.storeUsernamesFromFile(filePath, redisKey);
+    await generator.getRandomUsernameFromRedis(redisKey);
   } catch (error) {
     console.error('Error storing usernames:', error);
   }
