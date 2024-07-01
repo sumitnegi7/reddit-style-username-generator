@@ -19,15 +19,9 @@ class HydrateUsernamesInRedis {
 
   private detectRedisClient(client: any): string {
     if (client && typeof client === 'object') {
-      if (
-        typeof client.connect === 'function' &&
-        typeof client.createClient !== 'function'
-      ) {
+      if (typeof client.sadd === 'function') {
         return 'ioredis';
-      } else if (
-        typeof client.createClient === 'function' &&
-        typeof client.connect !== 'function'
-      ) {
+      } else if (typeof client.sAdd === 'function') {
         return 'node-redis';
       }
     }
