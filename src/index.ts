@@ -1,38 +1,14 @@
-import adjectives from './data/adjectives';
-import colors from './data/colors';
-import nouns from './data/nouns';
-import HydrateUsernamesInRedis from "./redis"
+// Export data modules
+export * from './data/adjectives';
+export * from './data/colors';
+export * from './data/nouns';
 
-function capitalizeFirstLetter(word: string): string {
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-}
+// Export utility functions
+export * from './utils';
 
-function getRandomNumber(min = 1, max = 999): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// Export main functionalities
+export * from './generateCombinationsToFile';
+export { default as HydrateUsernamesInRedis } from './redis';
 
-function generateUsername(
-  separator = "",
-  enableColor = false,
-  suffixNumber?: number
-): string {
-  const noun = nouns[Math.floor(Math.random() * nouns.length)];
-  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-  let color = "";
-
-  if (enableColor) {
-    color = colors[Math.floor(Math.random() * colors.length)];
-  }
-
-  let randomNumber = suffixNumber !== undefined ? suffixNumber : getRandomNumber();
-
-  const formattedAdjective = capitalizeFirstLetter(adjective);
-  const formattedColor = color ? capitalizeFirstLetter(color) : "";
-  const formattedNoun = capitalizeFirstLetter(noun);
-
-  return enableColor
-    ? `${formattedAdjective}${separator}${formattedColor}${separator}${formattedNoun}${randomNumber}`
-    : `${formattedAdjective}${separator}${formattedNoun}${randomNumber}`;
-}
-
-export { generateUsername, adjectives, nouns, colors, HydrateUsernamesInRedis };
+// Export types
+export * from './index.types';

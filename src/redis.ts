@@ -1,23 +1,44 @@
 import * as fs from 'fs';
-import Redis, { RedisOptions } from 'ioredis';
 import { generateCombinationsToFile } from './generateCombinationsToFile';
 
 class HydrateUsernamesInRedis {
-  private redis: Redis;
+  private redis: any;
+  private clientType: string;
 
-  constructor(redisOptions: RedisOptions | Redis) {
-    if (redisOptions instanceof Redis) {
-      this.redis = redisOptions;
+  constructor(redisInstance: any) {
+    this.clientType = this.detectRedisClient(redisInstance);
+
+    if (this.clientType === 'ioredis') {
+      this.redis = redisInstance;
+    } else if (this.clientType === 'node-redis') {
+      this.redis = redisInstance;
     } else {
-      this.redis = new Redis(redisOptions);
+      throw new Error('Unknown Redis client type');
     }
   }
 
+  private detectRedisClient(client: any): string {
+    if (client && typeof client === 'object') {
+      if (
+        typeof client.connect === 'function' &&
+        typeof client.createClient !== 'function'
+      ) {
+        return 'ioredis';
+      } else if (
+        typeof client.createClient === 'function' &&
+        typeof client.connect !== 'function'
+      ) {
+        return 'node-redis';
+      }
+    }
+    return 'unknown';
+  }
+
   async storeUsernamesFromFile(
-    filePath: string,
     redisKey: string,
     batchSize: number = 100,
   ): Promise<void> {
+    const filePath = './combinations.txt';
     try {
       await this.generateAndStoreCombinations(filePath, redisKey);
       console.log(
@@ -35,8 +56,8 @@ class HydrateUsernamesInRedis {
     redisKey: string,
   ): Promise<void> {
     try {
-      const outputFilePath = filePath; // Adjust the output file path as needed
-      const randomRange = [1, 2, 3, 4]; // Example range array
+      const outputFilePath = filePath;
+      const randomRange = [1, 2, 3, 4];
 
       // Generate combinations to file using function
       await generateCombinationsToFile(outputFilePath, randomRange);
@@ -90,7 +111,9 @@ class HydrateUsernamesInRedis {
   ): Promise<void> {
     if (usernames.length > 0) {
       try {
-        await this.redis.sadd(redisKey, ...usernames);
+        this.clientType === 'ioredis'
+          ? await this.redis.sadd(redisKey, ...usernames)
+          : await this.redis.SADD(redisKey, ...usernames);
         console.log(
           `Stored ${usernames.length} usernames in Redis set "${redisKey}".`,
         );
@@ -105,10 +128,15 @@ class HydrateUsernamesInRedis {
     removeSelectedUsername = false,
   ) {
     try {
-      const username = await this.redis.srandmember(redisKey);
+      const username =
+        this.clientType === 'ioredis'
+          ? await this.redis.srandmember(redisKey)
+          : await this.redis.SRANDMEMBER(redisKey);
 
       if (removeSelectedUsername) {
-        await this.redis.srem(redisKey, username);
+        this.clientType === 'ioredis'
+          ? await this.redis.srem(redisKey, username)
+          : await this.redis.SREM(redisKey, username);
       }
 
       return username;
